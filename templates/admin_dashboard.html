@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 100px;
+      background-color: #DDE6ED; 
+    }
+
+    .navbar-light .navbar-brand {
+          color: #164863 ;
+          font-size: 22px;
+          }
+    .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .show>.nav-link {
+            color:#164863;
+            font-size: 18px;
+            
+          }
+    .navbar{
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+          
+        }
+
+
+    .container {
+      margin-top: 15px;
+      color:#164863;
+    }
+
+    .card-img-placeholder {
+      height: 200px;
+      background-color: #f0f0f0;
+    }
+    .card-img-top{
+      height:200px; 
+    }
+    .add-section-button{
+      color: whitesmoke;
+      background-color: #164863; 
+      font-size: 18px;
+      right:20px;
+      position: absolute;
+      margin-top:7px;
+    }
+
+    .view-books-btn{
+      color:white;
+      background-color:#164863;
+
+    }
+    .form-control {
+  width: 450px;
+  max-width: none;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  border-radius: 60px;
+  padding: 10px 20px;
+  position: relative; 
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.search-bar input[type="search"] {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.search-bar button[type="submit"] {
+    padding: 5px 5px; 
+    width: 40px;
+    height: 40px; 
+    background: url('static/covers/search.png') no-repeat center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+}
+
+    .card-button{
+      position: absolute; 
+      top: calc(50% - 225px);
+      right: -8px; 
+      
+    }
+
+    h2{
+      margin-top: -40px;
+    }
+    .highlight {
+      box-shadow: 0px 0px 10px 5px rgb(170, 170, 170);
+      }
+    h5{
+      color:#164863;
+    }
+
+
+
+  </style>
+
+  <title>Librarian's Dashboard</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-#DDE6ED">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Librarian's Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="search-bar">
+          <div class="container-fluid mt-6">
+              <div class="row">
+                  <div class="col-md-12">
+                      <form action="" method="GET">
+                          <div class="input-group">
+                              <select name="parameter" id="parameter" class="form-control"> 
+                                  <option value="Name">Name</option> 
+                              </select>
+                              <input type="text" name="query" class="form-control" placeholder="Search for sections">
+                              <span class="input-group-btn">
+                                  <button class="primary" type="submit"></button> 
+                              </span>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+        <ul class="navbar-nav  mb-2 mb-lg-0 ms-auto">
+          
+          <li class="user_requests">
+              <a class="nav-link active" aria-current="page" href="{{url_for('view_requests')}}">Requests</a>
+          </li>
+          <li class="users">
+            <a class="nav-link active" aria-current="page" href="{{url_for('display_users')}}">Users</a>
+          </li>
+          <li class="users">
+            <a class="nav-link active" aria-current="page" href="{{url_for('admin_stats')}}">Stats</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <button type="button" class="btn btn-light add-section-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add section
+  </button>
+  
+<br>
+<br>
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add sections here!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="forms">
+            <form method='post' action="{{ url_for('add_section') }}" enctype="multipart/form-data">
+              <label for="title" class="form-label"> Title
+                <input type="text" name="title" id="title" class="form-control" required>
+              </label>
+              <br>
+              <label for="date" class="form-label"> Date Created
+                <input type="date" name="date" id="date" class="form-control" required>
+              </label>
+              <br>
+              <label for="description" class="form-label"> Description
+                <input type="text" name="description" id="description" class="form-control" required>
+              </label>
+              <br>
+                <label for="image" class="form-label">Choose Image
+                <input type="file" class="form-control" id="image" name="image">
+              </div>
+              <br>
+              <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="height: 200px;">
+    <h2>Your favourite genres !</h2>
+    <br>
+    <br>
+    <div id="sectionRow" class="row row-cols-4 mb-4">
+      {% for sec in Section %}
+      <div class="col mb-4">
+        
+        <div class="card">
+          {% if sec.image %}
+          <img src="{{ sec.image }}" class="card-img-top" alt="{{ sec.name }}">
+          {% else %}
+          <div class="card-img-placeholder"></div>
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ sec.name }}</h5>
+            <p class="card-text">{{ sec.description }}</p>
+            <form action="{{ url_for('view_books', id=sec.id) }}" method="post">
+              <button type="submit" class="dropdown-item view-books-btn">View books</button>
+            </form>
+            <div class="col">
+              <div class="dropdown" style=" background-color: white; ">
+                <button class="btn dropdown-toggle card-button" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li>
+                    <button type="button" class="dropdown-item" data-bs-toggle="modal"
+                      data-bs-target="#updateModal{{ loop.index }}">Update</button>
+                      </li>
+                  <li>
+                    <button type="button" class="dropdown-item" data-bs-toggle="modal"
+                      data-bs-target="#deletionModal{{ loop.index }}">Delete</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="updateModal{{ loop.index }}" tabindex="-1"
+        aria-labelledby="updateModalLabel{{ loop.index }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalLabel{{ loop.index }}">Update Section</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{{ url_for('update_section', id=sec.id) }}" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="editName{{ loop.index }}" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="editName{{ loop.index }}" name="name"
+                    value="{{ sec.name }}">
+                </div>
+                <div class="mb-3">
+                  <label for="editDescription{{ loop.index }}" class="form-label">Description</label>
+                  <textarea class="form-control" id="editDescription{{ loop.index }}" name="description"
+                    rows="3">{{ sec.description }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="editImage{{loop.index}}" class="form-label">Choose Image</label>
+                  <input type="file" class="form-control" id="editImage{{loop.index}}" name="image" value="{{sec.image}}">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="deletionModal{{ loop.index }}" tabindex="-1"
+        aria-labelledby="deletionModalLabel{{ loop.index }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deletionModalLabel{{ loop.index }}">Confirm delete !</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h5>Are you sure you want to delete?</h5>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form action="{{ url_for('delete_section', id=sec.id) }}" method="post">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
